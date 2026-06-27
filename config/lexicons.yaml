@@ -1,0 +1,410 @@
+# =============================================================================
+# Keyword lexicons used for evidence extraction and gate checks.
+#
+# These are matched case-insensitively with word boundaries against career
+# history text (title + description), which we trust, and occasionally against
+# the profile summary. The skills array is deliberately NOT a primary source —
+# it is the trap the organisers planted.
+# =============================================================================
+
+# Strong evidence the person actually BUILT retrieval / ranking / recsys work.
+retrieval_evidence:
+  - recommendation system
+  - recommendation engine
+  - recommender
+  - search ranking
+  - ranking system
+  - ranking model
+  - ranking pipeline
+  - learning to rank
+  - information retrieval
+  - vector search
+  - semantic search
+  - hybrid search
+  - search engine
+  - search relevance
+  - query understanding
+  - candidate generation
+  - personalization
+  - personalisation
+  - relevance model
+  - retrieval system
+  - retrieval pipeline
+  - embedding
+  - embeddings
+  - two-tower
+  - bm25
+  - elasticsearch
+  - opensearch
+  - solr
+  - faiss
+  - pinecone
+  - weaviate
+  - qdrant
+  - milvus
+  - hnsw
+  - approximate nearest neighbor
+  - ann index
+  - rerank
+  - re-rank
+  - feed ranking
+  - ctr prediction
+  - ctr model
+  - matchmaking
+
+# Language of production and scale — the JD wants a shipper.
+production_language:
+  - production
+  - deployed
+  - deploy
+  - shipping
+  - shipped
+  - launched
+  - serving
+  - served
+  - real-time
+  - latency
+  - throughput
+  - qps
+  - sla
+  - uptime
+  - scaled
+  - scale
+  - monitoring
+  - on-call
+  - incident
+  - rolled out
+  - rollout
+  - millions of users
+  - daily active
+  - end-to-end
+  - a/b test
+  - ab test
+  - a/b testing
+  - canary
+
+# Ranking-evaluation literacy (a JD must-have).
+evaluation_language:
+  - ndcg
+  - mrr
+  - mean reciprocal rank
+  - mean average precision
+  - offline evaluation
+  - offline benchmark
+  - online metrics
+  - a/b test
+  - ab test
+  - interleaving
+  - precision@
+  - recall@
+  - click-through
+
+# Applied AI/ML role detection (title or description).
+ai_ml_terms:
+  - machine learning
+  - ml engineer
+  - deep learning
+  - data scientist
+  - data science
+  - applied scientist
+  - ai engineer
+  - artificial intelligence
+  - nlp
+  - natural language
+  - recommendation
+  - recommender
+  - ranking
+  - retrieval
+  - search relevance
+  - llm
+  - large language model
+  - embeddings
+  - transformer
+  - bert
+  - pytorch
+  - tensorflow
+  - mlops
+
+# NLP / IR exposure (JD: CV/speech/robotics without this is a reject).
+nlp_ir_terms:
+  - nlp
+  - natural language
+  - text classification
+  - named entity
+  - information retrieval
+  - search
+  - ranking
+  - retrieval
+  - embedding
+  - embeddings
+  - language model
+  - llm
+  - transformer
+  - bert
+  - summarization
+  - question answering
+  - semantic
+  - tokenization
+  - text mining
+  - chatbot
+  - conversational
+
+# CV / speech / robotics domain markers.
+cv_speech_robotics:
+  - computer vision
+  - image classification
+  - image segmentation
+  - object detection
+  - opencv
+  - image processing
+  - video analytics
+  - speech recognition
+  - speech-to-text
+  - text-to-speech
+  - asr
+  - tts
+  - robotics
+  - slam
+  - autonomous vehicle
+  - autonomous driving
+  - self-driving
+  - lidar
+  - drone
+  - 3d reconstruction
+
+# LLM-API wrapper era markers (fine as bonus, a reject if it's ALL there is).
+llm_wrapper_terms:
+  - langchain
+  - llamaindex
+  - llama-index
+  - prompt engineering
+  - prompt engineer
+  - openai api
+  - gpt-4
+  - gpt-3
+  - chatgpt
+  - rag chatbot
+  - rag pipeline
+  - agentic
+  - autogen
+  - crewai
+  - ai agent
+
+# Research-environment markers (titles / orgs).
+research_titles:
+  - research scientist
+  - researcher
+  - research intern
+  - research fellow
+  - research assistant
+  - postdoc
+  - postdoctoral
+  - phd student
+  - doctoral
+  - professor
+  - lecturer
+research_orgs:
+  - university
+  - institute of technology
+  - research institute
+  - research lab
+  - laboratory
+  - academy
+  - college
+
+# Pure IT-services / consulting firms (JD names these explicitly).
+consulting_firms:
+  - tata consultancy
+  - tcs
+  - infosys
+  - wipro
+  - accenture
+  - cognizant
+  - capgemini
+  - hcl technologies
+  - hcltech
+  - tech mahindra
+  - mindtree
+  - ltimindtree
+  - l&t infotech
+  - mphasis
+  - genpact
+  - dxc technology
+  - ntt data
+  - virtusa
+  - hexaware
+  - zensar
+  - birlasoft
+  - cgi
+  - atos
+  - sonata software
+  - cybage
+  - mastek
+consulting_industries:
+  - it services
+  - information technology services
+  - outsourcing
+  - consulting
+  - staffing
+
+# Titles that suggest the person no longer writes code (JD: reject if no
+# hands-on role in 18 months) — unless the description shows hands-on markers.
+non_coding_titles:
+  - solution architect
+  - solutions architect
+  - enterprise architect
+  - engineering manager
+  - delivery manager
+  - program manager
+  - project manager
+  - product manager
+  - director
+  - vice president
+  - vp of
+  - head of
+  - chief technology officer
+  - cto
+  - general manager
+
+# Evidence of hands-on coding inside a role description.
+hands_on_markers:
+  - built
+  - implemented
+  - developed
+  - coded
+  - wrote
+  - programmed
+  - debugged
+  - optimized
+  - optimised
+  - refactored
+  - python
+  - java
+  - c++
+  - golang
+  - sql
+  - pytorch
+  - tensorflow
+  - api
+
+# Non-engineering tracks; AI keywords on these titles are the classic stuffer.
+non_engineering_titles:
+  - marketing
+  - sales
+  - business development
+  - recruiter
+  - talent acquisition
+  - human resources
+  - hr executive
+  - account manager
+  - customer success
+  - content writer
+  - graphic designer
+  - operations manager
+  - finance
+  - accountant
+
+# Culture / ownership / writing cues (low weight, soft).
+culture_markers:
+  - mentored
+  - mentoring
+  - design doc
+  - rfc
+  - documentation
+  - wrote
+  - blog
+  - published
+  - presented
+  - talk
+  - open source
+  - open-source
+  - owned
+  - ownership
+  - end-to-end
+  - async
+  - cross-functional
+  - founded
+
+# Nice-to-have bonus categories (capped; tie-breakers, never rescues).
+bonus_categories:
+  fine_tuning:
+    - lora
+    - qlora
+    - peft
+    - fine-tuned
+    - fine-tuning
+    - finetuning
+    - finetuned
+    - instruction tuning
+    - sft
+  learning_to_rank:
+    - learning to rank
+    - lambdamart
+    - xgboost
+    - lightgbm
+    - catboost
+    - gbdt
+  hr_marketplace:
+    - hr tech
+    - recruiting
+    - recruitment
+    - talent platform
+    - hiring platform
+    - job board
+    - applicant tracking
+    - marketplace
+  distributed_inference:
+    - distributed systems
+    - kafka
+    - spark
+    - ray
+    - kubernetes
+    - model serving
+    - inference optimization
+    - triton
+    - onnx
+    - quantization
+    - quantized
+  open_source:
+    - open source
+    - open-source
+    - maintainer
+    - contributor
+    - github
+
+# Skill names considered JD-relevant when matching skill_assessment_scores.
+jd_skill_keys:
+  - python
+  - machine learning
+  - deep learning
+  - nlp
+  - natural language
+  - pytorch
+  - tensorflow
+  - information retrieval
+  - search
+  - ranking
+  - recommendation
+  - elasticsearch
+  - sql
+  - statistics
+  - llm
+  - embedding
+  - vector
+  - data structures
+
+# Location tiers (JD: Pune/Noida preferred; Hyd/Mumbai/Delhi NCR welcome).
+cities:
+  primary:
+    - pune
+    - noida
+  welcome:
+    - hyderabad
+    - mumbai
+    - navi mumbai
+    - delhi
+    - new delhi
+    - gurgaon
+    - gurugram
+    - ghaziabad
+    - faridabad

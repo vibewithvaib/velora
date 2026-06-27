@@ -1,0 +1,16 @@
+# Pinned versions — verified on Python 3.12, CPU-only
+
+# Core: the ranking step (rank.py) needs ONLY these two + stdlib.
+numpy==2.4.6
+PyYAML==6.0.3
+
+# Precompute only (embedding generation; never imported by the rank path).
+# Install the CPU build of torch:
+#   pip install torch==2.12.0 --index-url https://download.pytorch.org/whl/cpu
+sentence-transformers==5.5.1
+torch==2.12.0
+transformers==5.10.2
+huggingface_hub==1.18.0
+
+# Sandbox demo only (app.py on HuggingFace Spaces / Streamlit Cloud)
+# streamlit>=1.30

@@ -1,0 +1,157 @@
+# =============================================================================
+# Redrob Candidate Ranker — master configuration
+#
+# Every tunable parameter of the pipeline lives here. Code must not hardcode
+# any of these values. Weights are starting points tuned on the golden set
+# (see evaluation/) — not constants from heaven.
+# =============================================================================
+
+# Reference "today" for all recency math. null => derived deterministically in
+# precompute as max(last_active_date) over the dataset and stored in the
+# artifact metadata, so the same input file always yields the same output.
+reference_date: null
+
+# --- Embedding model (used ONLY in precompute; rank step never loads torch) --
+model:
+  name: sentence-transformers/all-MiniLM-L6-v2
+  batch_size: 256
+  max_seq_length: 256
+
+artifacts_dir: artifacts
+
+# --- Evidence document construction (Stage 0) --------------------------------
+evidence:
+  per_role_encoding: true     # encode each role separately, pool with weights
+  profile_text_weight: 0.20   # weight of headline+summary vs career roles
+  recency_half_life_years: 4  # role weight halves every N years since role end
+  min_role_weight: 0.05       # floor so very old roles still contribute a little
+
+# --- JD intent facets (Stage 0/2). We embed INTENT, not keywords. ------------
+jd_facets:
+  - "Built and deployed production embedding-based retrieval and vector search systems at scale for real users"
+  - "Designed rigorous evaluation frameworks for ranking systems: NDCG, MRR, MAP, offline benchmarks, online A/B testing"
+  - "Shipped an end-to-end search, ranking or recommendation system to production at meaningful scale"
+  - "Applied machine learning engineer at a product company building NLP and information retrieval systems"
+  - "Strong Python engineer who writes production code, owns systems end to end, and ships quickly"
+
+# Facets that count as "core technical capability" for the technical-fit score
+# (indices into jd_facets). The last facet is attitude/culture flavored.
+core_facet_indices: [0, 1, 2, 3]
+
+# --- Stage 2: semantic retrieval ---------------------------------------------
+retrieval:
+  shortlist_size: 3000
+  facet_agg: max              # max | mean over facets for the pooled vector
+  # Cosine similarities from MiniLM live roughly in [0.05, 0.65]; rescale to
+  # 0-1 before they enter weighted sums.
+  sim_calibration: { lo: 0.10, hi: 0.60 }
+
+# --- Stage 3: core fit --------------------------------------------------------
+core_fit:
+  weights:
+    technical: 0.45
+    shipping: 0.20
+    experience: 0.20
+    culture: 0.05
+    logistics: 0.10
+  # technical_fit T = blend of semantic role-evidence, lexical built-it
+  # evidence, and applied-AI tenure at product companies.
+  technical_blend:
+    semantic: 0.55
+    evidence_keywords: 0.30
+    applied_ai_tenure: 0.15
+  # inside T's semantic part: weighted-mean over roles vs best single role
+  semantic_blend: { wmean: 0.6, best_role: 0.4 }
+  # Must-have gate: core *= clamp(T / tau, 0, 1) ** beta
+  gate: { tau_tech: 0.45, beta: 1.5 }
+  bonus_cap: 0.10             # nice-to-haves can break ties, never rescue
+  bonus_per_hit: 0.025        # per nice-to-have category present
+  # Experience curve: piecewise linear years -> score. Peaks across the JD's
+  # 5-9 band, gentle falloff outside (a range, not a cutoff).
+  experience_curve:
+    points: [[0, 0.05], [2, 0.30], [4, 0.75], [5, 1.00], [9, 1.00], [12, 0.85], [15, 0.70], [25, 0.55]]
+  applied_ai_years_curve:
+    points: [[0, 0.00], [1, 0.25], [2, 0.50], [4, 0.90], [5, 1.00], [12, 1.00]]
+  experience_blend: { total_years: 0.5, applied_ai_years: 0.5 }
+
+# --- Stage 4: behavioral & hireability ----------------------------------------
+behavioral:
+  weights:
+    availability: 0.45
+    credibility: 0.15
+    market: 0.12
+    professionalism: 0.10
+    logistics_compat: 0.10
+    activity: 0.08
+  availability_mult_floor: 0.5    # avail_mult = floor + (1-floor) * availability
+  availability:
+    weights:
+      open_to_work: 0.20
+      recency: 0.25
+      response_rate: 0.20
+      response_time: 0.10
+      notice_period: 0.15
+      interview_completion: 0.10
+    last_active_half_life_days: 65    # fresh ~1.0, six months ~0.15 (JD's case)
+    response_time_scale_hours: 24
+    # notice period: <=30d ideal (JD buys out up to 30), then degrading
+    notice_bands: [[30, 1.00], [60, 0.70], [90, 0.45], [180, 0.25]]
+  caps:                       # log-scale + clip so one viral profile can't dominate
+    profile_views_received_30d: 200
+    search_appearance_30d: 300
+    saved_by_recruiters_30d: 50
+    connection_count: 1000
+    endorsements_received: 300
+  activity:
+    zero_apps_score: 0.35     # not applying isn't damning, just less warm
+    ideal_lo: 1
+    ideal_hi: 30
+    spam_hi: 200              # 200 apps/30d reads spray-and-pray
+    spam_score: 0.10
+  salary_band_lpa: [30, 80]   # sane band for Senior AI Eng, Series A, India
+  salary_missing_score: 0.5
+
+# --- Logistics (used by core L and behavioral logistics_compat) ---------------
+logistics:
+  city_scores:
+    primary: 1.00             # Pune / Noida
+    welcome: 0.85             # Hyderabad, Mumbai, Delhi NCR (JD: welcome to apply)
+    india_relocate: 0.70      # elsewhere in India, willing to relocate
+    india_fixed: 0.40         # elsewhere in India, not willing
+    abroad: 0.20              # no visa sponsorship
+  work_mode_scores: { hybrid: 1.0, flexible: 1.0, onsite: 0.9, remote: 0.55 }
+
+# --- Stage 5: trust / consistency multiplier -----------------------------------
+trust:
+  multipliers: { clean: 1.00, minor: 0.85, several: 0.65, shaky: 0.40 }
+  # mismatch count -> tier thresholds
+  minor_at: 1
+  several_at: 2
+  shaky_at: 4
+
+# --- Stage 1: hard gates --------------------------------------------------------
+gates:
+  # LangChain-wrapper-only: AI experience < 12 months of LLM-API work and no
+  # ML/IR production role that started before this year is a reject (JD).
+  pre_llm_cutoff_year: 2022
+  langchain_only_max_ai_months: 12
+  stopped_coding_months: 18
+  honeypot:
+    # high precision on purpose: only provable impossibilities kill a profile
+    future_date_slack_days: 31
+    duration_mismatch_months: 24      # |stated duration - date math| beyond this
+    duration_mismatch_ratio: 2.5
+    career_vs_stated_slack_months: 30 # union(role months) >> stated years
+    span_vs_stated_slack_months: 30   # stated years >> total career span
+    expert_zero_month_min_count: 3    # >=3 "expert" skills with 0 months used
+    active_before_signup_days: 1
+
+# --- Stage 6: fusion -------------------------------------------------------------
+fusion:
+  core_weight: 0.75
+  behavioral_weight: 0.25
+
+# --- Output ----------------------------------------------------------------------
+output:
+  top_k: 100
+  score_decimals: 4
