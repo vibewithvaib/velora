@@ -142,7 +142,7 @@ If artifacts are not available, the ranking pipeline automatically performs prec
 
 # Streamlit Demo
 
-Cloud Demo Link: 
+Cloud Demo Link: https://velora-f94q2n4nwe8uyekw9zswcr.streamlit.app/
 
 OR
 
