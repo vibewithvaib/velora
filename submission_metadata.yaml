@@ -1,0 +1,33 @@
+team_name: "NeuroKin.AI"                       
+primary_contact_name: "Vaibhavi Kadam"            
+primary_contact_email: "kadamvaibhavi2701@gmail.com"           
+primary_contact_phone: "9326400351"           
+github_repository_url: "https://github.com/vibewithvaib/velora"           
+sandbox_demo_link: "https://velora-f94q2n4nwe8uyekw9zswcr.streamlit.app/"               
+ai_tools_declared:
+  - Claude
+compute_environment_summary: "MacBook (Apple Silicon), 16GB RAM, Python 3.12, CPU only"
+team_members:
+  - name: "Vaibhavi Kadam"                        
+    email: "kadamvaibhavi2701@gmail.com"    
+  - name: "Sanskar Singh"                        
+    email: "sanskar3272@gmail.com"    
+  - name: "Devyani Kadam"
+    email: "devyanikadam1405@gmail.com"
+  - name: "Digvijay Kadam"
+    email: "digvijaykadam1405@gmail.com"
+methodology_summary: >
+  Staged retrieve-then-rank over precomputed artifacts. Offline: each career
+  role is embedded separately (all-MiniLM-L6-v2) and pooled with duration x
+  recency weights; the skills list is excluded from embeddings as the planted
+  trap. Online (<5s, pure NumPy): hard gates remove honeypots via provable
+  internal impossibilities and apply the JD's stated disqualifiers; semantic
+  retrieval against JD intent facets shortlists ~3k; core fit scores
+  technical/shipping/experience/culture/logistics with a multiplicative
+  technical gate so keyword stuffers cannot buy rank; 23 behavioral signals
+  form a hireability score and an availability multiplier (stale stars sink);
+  a trust multiplier discounts unverifiable claims. Final = trust x
+  availability x (0.75 core + 0.25 behavioral). Reasoning is generated
+  deterministically from profile facts only — no LLM calls anywhere in the
+  ranking path. Validated locally via planted-trap synthetic harness
+  (honeypot recall, twin tests, NDCG composite) plus unit tests on every gate.
