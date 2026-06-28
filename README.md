@@ -61,6 +61,8 @@ Submission CSV
 │   ├── config.yaml
 │   └── lexicons.yaml
 │
+├── data/ (Create this folder and add candidates.jsonl inside it)
+│   ├── candidates.jsonl 
 ├── src/
 │   ├── retrieval.py
 │   ├── core_fit.py
